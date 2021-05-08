@@ -7,6 +7,8 @@ Created on Fri May  7 06:44:13 2021
 
 import random
 
+__all__ = ['RandomBinaryGenerator']
+
 class RandomBinaryGenerator(object):
     
     def __init__(self, bits):

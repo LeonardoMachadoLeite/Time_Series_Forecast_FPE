@@ -5,9 +5,8 @@ Created on Fri Mar 12 18:49:18 2021
 @author: leoml
 """
 from statsmodels.tsa.api import Holt
-import random
-import math
 
+__all__ = ['Holt_Constructor']
 
 class Holt_Constructor(object):
     
@@ -59,16 +58,4 @@ class Holt_Constructor(object):
         print('\toptimized =\t', self.get_bool('optimized'))
         print('\tdamping_slope =\t', self.get_float('damping_slope'))
         print('}')
-
-
-class RandomBinaryGenerator(object):
-    
-    def __init__(self, bits):
-        self.bits = bits
-    
-    def random_binary(self):
-        number = ''
-        for i in range(self.bits):
-            number += str(round(random.random()))
-        return number
 
