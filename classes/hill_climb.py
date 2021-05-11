@@ -17,9 +17,9 @@ from random_binary_generator import RandomBinaryGenerator
 
 class HillClimbOptimization(object):
     
-    def __init__(self, f_calcular_erro):
-        self.generator = RandomBinaryGenerator(29)
-        self.log_holts = {
+    def __init__(self, f_calcular_erro, bits):
+        self.generator = RandomBinaryGenerator(bits)
+        self.log = {
             'ID': [],
             'ITERACAO': [],
             'PARAM_ATUAL': [],
@@ -27,7 +27,7 @@ class HillClimbOptimization(object):
             'PARAM_MELHOR': [],
             'MPA_MELHOR': []
         }
-        self.test_results_holt = {
+        self.test_results = {
             'ID': [],
             'ITERACOES': [],
             'PARAM': [],
@@ -37,52 +37,55 @@ class HillClimbOptimization(object):
     
     def start_random_initialization(self, n, intevalo, fpe):
         for i in range(n):
+            print(i)
             param = self.generator.random_binary()
             
             erro_medio = self.f_calcular_erro(fpe, param, 1)
             
-            self.test_results_holt['ID'].append(i)
-            self.test_results_holt['ITERACOES'].append(1)
-            self.test_results_holt['PARAM'].append(param)
-            self.test_results_holt['MPA'].append(erro_medio)
+            self.test_results['ID'].append(i)
+            self.test_results['ITERACOES'].append(1)
+            self.test_results['PARAM'].append(param)
+            self.test_results['MPA'].append(erro_medio)
             
-            self.log_holts = {
-                'ID': self.test_results_holt['ID'].copy(),
-                'ITERACAO': self.test_results_holt['ITERACOES'].copy(),
-                'PARAM_ATUAL': self.test_results_holt['PARAM'].copy(),
-                'MPA_ATUAL': self.test_results_holt['MPA'].copy(),
-                'PARAM_MELHOR': self.test_results_holt['PARAM'].copy(),
-                'MPA_MELHOR': self.test_results_holt['MPA'].copy()
+            self.log = {
+                'ID': self.test_results['ID'].copy(),
+                'ITERACAO': self.test_results['ITERACOES'].copy(),
+                'PARAM_ATUAL': self.test_results['PARAM'].copy(),
+                'MPA_ATUAL': self.test_results['MPA'].copy(),
+                'PARAM_MELHOR': self.test_results['PARAM'].copy(),
+                'MPA_MELHOR': self.test_results['MPA'].copy()
             }
 
     def optimize(self, max_iter, intervalo, fpe):
-        for i in range(len(self.test_results_holt['ITERACOES'])):
+        for i in range(len(self.test_results['ITERACOES'])):
             print('Iteração: ', i + 1)
             tentativas_sem_melhoria = 0
             
-            while self.test_results_holt['ITERACOES'][i] < max_iter:
-                self.test_results_holt['ITERACOES'][i] += 1
+            while self.test_results['ITERACOES'][i] < max_iter:
+                self.test_results['ITERACOES'][i] += 1
                 tentativas_sem_melhoria += 1
                 
-                id_ = self.test_results_holt['ID'][i]
-                param = self.generator.bit_flip_mutation(self.test_results_holt['PARAM'][i])
+                if tentativas_sem_melhoria % 50: print('N_param: ', tentativas_sem_melhoria)
+                
+                id_ = self.test_results['ID'][i]
+                param = self.generator.bit_flip_mutation(self.test_results['PARAM'][i])
                 
                 erro_medio = self.f_calcular_erro(fpe, param, intervalo)
                 
-                self.log_holts['ID'].append(id_)
-                self.log_holts['ITERACAO'].append(self.test_results_holt['ITERACOES'][i])
-                self.log_holts['PARAM_ATUAL'].append(param)
-                self.log_holts['MPA_ATUAL'].append(erro_medio)
+                self.log['ID'].append(id_)
+                self.log['ITERACAO'].append(self.test_results['ITERACOES'][i])
+                self.log['PARAM_ATUAL'].append(param)
+                self.log['MPA_ATUAL'].append(erro_medio)
                 
-                if erro_medio <= self.test_results_holt['MPA'][i]:
+                if erro_medio <= self.test_results['MPA'][i]:
                     tentativas_sem_melhoria = 0
                     
-                    self.test_results_holt['ID'][i] = id_
-                    self.test_results_holt['PARAM'][i] = param
-                    self.test_results_holt['MPA'][i] = erro_medio
+                    self.test_results['ID'][i] = id_
+                    self.test_results['PARAM'][i] = param
+                    self.test_results['MPA'][i] = erro_medio
                     
-                self.log_holts['PARAM_MELHOR'].append(self.test_results_holt['PARAM'][i])
-                self.log_holts['MPA_MELHOR'].append(self.test_results_holt['MPA'][i])
+                self.log['PARAM_MELHOR'].append(self.test_results['PARAM'][i])
+                self.log['MPA_MELHOR'].append(self.test_results['MPA'][i])
 
         # return self.test_results_holt, self.log_holts
-        return pd.DataFrame(self.test_results_holt), pd.DataFrame(self.log_holts).sort_values(by=['ID', 'ITERACAO'], ascending=True)
+        return pd.DataFrame(self.test_results), pd.DataFrame(self.log).sort_values(by=['ID', 'ITERACAO'], ascending=True)

@@ -7,25 +7,30 @@ Created on Mon Mar  8 18:38:32 2021
 import sys
 import warnings
 warnings.filterwarnings('ignore')
+import os
+from dotenv import load_dotenv, find_dotenv
 
-home_dir = 'E:\\leoml\\Documents\\Leonardo\\SEFAZ\\FPE\\Time Series Forecast - FPE'
-sys.path.append(home_dir)
+# Connect the path with your '.env' file name
+load_dotenv(find_dotenv())
 
-import statsmodels.api as sm
-from statsmodels.tsa.api import Holt
+home_dir = os.getenv("HOME_DIR")
+
+sys.path.append(home_dir + '\\classes')
+
 import pandas as pd
 import numpy as np
 
 from sarimax_constructor import SARIMAX_Constructor
 from holt_constructor import Holt_Constructor
-from random_binary_generator import RandomBinaryGenerator
 from hill_climb import HillClimbOptimization
 from simulated_annealing import SimulatedAnnealingOptimization
 
+fpe = pd.read_csv(home_dir + '\\data\\preprocessed\\FPE.csv', sep=';', index_col='Data')['Total']
+
 # Endog
-fpe_1m = pd.read_csv(home_dir + '\\FPE_1_M.csv', sep=';', index_col='Data')['Total']
-fpe_6m = pd.read_csv(home_dir + '\\FPE_6_M.csv', sep=';', index_col='Data')['Total']
-fpe_12m = pd.read_csv(home_dir + '\\FPE_12_M.csv', sep=';', index_col='Data')['Total']
+fpe_1m = fpe.loc[fpe.index < fpe.index[-11]]
+fpe_6m = fpe.loc[fpe.index < fpe.index[-6]]
+fpe_12m = fpe
 
 #Metodo que vai calcular o Erro do Modelo-SARIMAX
 def calculo_erro_sarimax(desp_serie, param, intervalo):
@@ -37,6 +42,7 @@ def calculo_erro_sarimax(desp_serie, param, intervalo):
         inter_real.append(max_size)
         desp_serie = desp_serie.drop(max_size)
 
+    sarimax_const = SARIMAX_Constructor()
     model = sarimax_const.create_SARIMAX(desp_serie, param)
     model_fit = model.fit(disp=0, cov_type='none', method='bfgs')
 
@@ -88,76 +94,96 @@ def calculo_erro_holt(desp_serie, param, intervalo):
                 
 
 #Execução dos testes SARIMAX
-sarimax_const = SARIMAX_Constructor()
-
-test_results_sarimax = {
-    'ID': [],
-    'MPA': []
-}
-params = list(range(256))
-
-
-
-# for i in range(256):
-#     print('Iteração: ', i + 1)
-#     index = random.randint(0, len(params) - 1)
-#     param = params[index]
-#     del params[index]
-#     erro_medio = calculo_erro_sarimax(fpe_1m, param, 1)
-#     erro_medio = calculo_erro_sarimax(fpe_1m, param, 1)
-#     test_results_sarimax['ID'].append(param)
-#     test_results_sarimax['MPA'].append(erro_medio)
-
-# test_results_sarimax = pd.DataFrame(test_results_sarimax)
-# print('Erro Médio SARIMAX: {:.2f}%'.format(erro_medio * 100))
-
+# 1m
 
 warnings.filterwarnings('ignore')
-
-fpe = fpe_1m
 intervalo = 1
 
-hill = HillClimbOptimization()
-hill.start_random_initialization(25, intervalo)
-test_results_holt, log_holts = hill.optimize(1000, intervalo)
+# hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
+hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 16)
 
-log_holts.to_csv('log_holts_hill_climb_1m.csv', sep=';')
+# hill_holts.start_random_initialization(25, intervalo, fpe_1m)
+hill_sarimax.start_random_initialization(25, intervalo, fpe_1m)
 
-anneal = SimulatedAnnealingOptimization()
-anneal.start_random_initialization(25, intervalo)
-test_results_holt, log_holts = anneal.optimize(1000, intervalo)
+# test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
+test_results_sarimax, log_sarimax = hill_sarimax.optimize(1000, intervalo, fpe_1m)
 
-log_holts.to_csv('log_holts_simulated_annealing_1m.csv', sep=';')
+# log_holts.to_csv('log_holts_hill_climb_1m.csv', sep=';')
+log_sarimax.to_csv('\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';')
 
-fpe = fpe_6m
+
+# =============================================================================
+# anneal = SimulatedAnnealingOptimization()
+# anneal.start_random_initialization(25, intervalo)
+# test_results_holt, log_holts = anneal.optimize(1000, intervalo)
+# 
+# log_holts.to_csv('log_holts_simulated_annealing_1m.csv', sep=';')
+# =============================================================================
+
+# =============================================================================
+# 6 m
 intervalo = 6
 
-hill = HillClimbOptimization()
-hill.start_random_initialization(25, intervalo)
-test_results_holt, log_holts = hill.optimize(1000, intervalo)
+# hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
+hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 16)
 
-log_holts.to_csv('log_holts_hill_climb_6m.csv', sep=';')
+# hill_holts.start_random_initialization(25, intervalo, fpe_1m)
+hill_sarimax.start_random_initialization(25, intervalo, fpe_6m)
 
-anneal = SimulatedAnnealingOptimization()
-anneal.start_random_initialization(25, intervalo)
-test_results_holt, log_holts = anneal.optimize(1000, intervalo)
+# test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
+test_results_sarimax, log_sarimax = hill_sarimax.optimize(1000, intervalo, fpe_1m)
 
-log_holts.to_csv('log_holts_simulated_annealing_6m.csv', sep=';')
+# log_holts.to_csv('log_holts_hill_climb_1m.csv', sep=';')
+log_sarimax.to_csv('\\data\\logs\\log_sarimax_hill_climb_6m.csv', sep=';')
 
-fpe = fpe_12m
+
+# =============================================================================
+# 12 m
 intervalo = 12
 
-hill = HillClimbOptimization()
-hill.start_random_initialization(25, intervalo)
-test_results_holt, log_holts = hill.optimize(1000, intervalo)
+# hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
+hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 16)
 
-log_holts.to_csv('log_holts_hill_climb_12m.csv', sep=';')
+# hill_holts.start_random_initialization(25, intervalo, fpe_1m)
+hill_sarimax.start_random_initialization(25, intervalo, fpe_12m)
 
-anneal = SimulatedAnnealingOptimization()
-anneal.start_random_initialization(25, intervalo)
-test_results_holt, log_holts = anneal.optimize(1000, intervalo)
+# test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
+test_results_sarimax, log_sarimax = hill_sarimax.optimize(1000, intervalo, fpe_1m)
 
-log_holts.to_csv('log_holts_simulated_annealing_12m.csv', sep=';')
+# log_holts.to_csv('log_holts_hill_climb_1m.csv', sep=';')
+log_sarimax.to_csv('\\data\\logs\\log_sarimax_hill_climb_12m.csv', sep=';')
+
+# =============================================================================
+# fpe = fpe_6m
+# intervalo = 6
+# 
+# hill = HillClimbOptimization()
+# hill.start_random_initialization(25, intervalo)
+# test_results_holt, log_holts = hill.optimize(1000, intervalo)
+# 
+# log_holts.to_csv('log_holts_hill_climb_6m.csv', sep=';')
+# 
+# anneal = SimulatedAnnealingOptimization()
+# anneal.start_random_initialization(25, intervalo)
+# test_results_holt, log_holts = anneal.optimize(1000, intervalo)
+# 
+# log_holts.to_csv('log_holts_simulated_annealing_6m.csv', sep=';')
+# 
+# fpe = fpe_12m
+# intervalo = 12
+# 
+# hill = HillClimbOptimization()
+# hill.start_random_initialization(25, intervalo)
+# test_results_holt, log_holts = hill.optimize(1000, intervalo)
+# 
+# log_holts.to_csv('log_holts_hill_climb_12m.csv', sep=';')
+# 
+# anneal = SimulatedAnnealingOptimization()
+# anneal.start_random_initialization(25, intervalo)
+# test_results_holt, log_holts = anneal.optimize(1000, intervalo)
+# 
+# log_holts.to_csv('log_holts_simulated_annealing_12m.csv', sep=';')
+# =============================================================================
 
 # test_results_holt = pd.DataFrame(test_results_holt)
 # log_holts = pd.DataFrame(log_holts)
