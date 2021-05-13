@@ -37,7 +37,7 @@ class HillClimbOptimization(object):
     
     def start_random_initialization(self, n, intevalo, fpe):
         for i in range(n):
-            print(i)
+            print('init: ', i)
             param = self.generator.random_binary()
             
             erro_medio = self.f_calcular_erro(fpe, param, 1)
@@ -59,13 +59,13 @@ class HillClimbOptimization(object):
     def optimize(self, max_iter, intervalo, fpe):
         for i in range(len(self.test_results['ITERACOES'])):
             print('Iteração: ', i + 1)
-            tentativas_sem_melhoria = 0
+            # tentativas_sem_melhoria = 0
             
             while self.test_results['ITERACOES'][i] < max_iter:
                 self.test_results['ITERACOES'][i] += 1
-                tentativas_sem_melhoria += 1
+                # tentativas_sem_melhoria += 1
                 
-                if tentativas_sem_melhoria % 50: print('N_param: ', tentativas_sem_melhoria)
+                if self.test_results['ITERACOES'][i] % 50 == 0: print('i: ', self.test_results['ITERACOES'][i])
                 
                 id_ = self.test_results['ID'][i]
                 param = self.generator.bit_flip_mutation(self.test_results['PARAM'][i])
@@ -78,8 +78,6 @@ class HillClimbOptimization(object):
                 self.log['MPA_ATUAL'].append(erro_medio)
                 
                 if erro_medio <= self.test_results['MPA'][i]:
-                    tentativas_sem_melhoria = 0
-                    
                     self.test_results['ID'][i] = id_
                     self.test_results['PARAM'][i] = param
                     self.test_results['MPA'][i] = erro_medio
