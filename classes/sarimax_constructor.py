@@ -133,7 +133,7 @@ class SARIMAX_Constructor(object):
         print('fit_method=', self.get_method())
         print('cov_type=', self.get_cov_type())
     
-    @lru_cache(maxsize=2500)
+    @lru_cache(maxsize=100)
     def fit_model(self, param):
         starttime = time.perf_counter()
         self.log.append(('C', param, 'Creating SARIMAX', None))

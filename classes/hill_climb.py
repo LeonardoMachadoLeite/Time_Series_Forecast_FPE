@@ -65,7 +65,7 @@ class HillClimbOptimization(object):
                 self.test_results['ITERACOES'][i] += 1
                 # tentativas_sem_melhoria += 1
                 
-                if self.test_results['ITERACOES'][i] % 50 == 0: print('i: ', self.test_results['ITERACOES'][i])
+                if self.test_results['ITERACOES'][i] % 10 == 0: print('i: ', self.test_results['ITERACOES'][i])
                 
                 id_ = self.test_results['ID'][i]
                 param = self.generator.bit_flip_mutation(self.test_results['PARAM'][i])

@@ -34,17 +34,17 @@ fpe_6m = fpe.loc[fpe.index < fpe.index[-6]]
 fpe_12m = fpe
 
 
-exe_log = []
+exec_log = []
 
-@lru_cache(maxsize=10)
-def fit_model(constructor, desp_serie, param):
-    sarimax_const = constructor()
-    exe_log.append(('C', param, 'Done'))
-    model = sarimax_const.create_SARIMAX(desp_serie, param)
-    exe_log.append(('F1', param, 'Done'))
-    model_fit = model.fit()
-    exe_log.append(('F2', param, 'Done'))
-    return model_fit
+# @lru_cache(maxsize=10)
+# def fit_model(constructor, desp_serie, param):
+#     sarimax_const = constructor()
+#     exe_log.append(('C', param, 'Done'))
+#     model = sarimax_const.create_SARIMAX(desp_serie, param)
+#     exe_log.append(('F1', param, 'Done'))
+#     model_fit = model.fit()
+#     exe_log.append(('F2', param, 'Done'))
+#     return model_fit
 
 #Metodo que vai calcular o Erro do Modelo-SARIMAX
 def calculo_erro_sarimax(desp_serie, param, intervalo):
@@ -57,20 +57,14 @@ def calculo_erro_sarimax(desp_serie, param, intervalo):
             inter_real.append(max_size)
             desp_serie = desp_serie.drop(max_size)
     
-        # sarimax_const = SARIMAX_Constructor()
-        # exe_log.append(('C', param, 'Done'))
-        # model = sarimax_const.create_SARIMAX(desp_serie, param)
-        # exe_log.append(('F1', param, 'Done'))
-        # model_fit = model.fit()
-        # exe_log.append(('F2', param, 'Done'))
-        model_fit = fit_model(SARIMAX_Constructor, desp_serie, param)
+        model_fit = SARIMAX_Constructor(desp_serie, exec_log).fit_model(param)
     
         start = len(desp_serie)
         end = len(desp_serie)+intervalo-1
     
-        exe_log.append(('P1', param, 'Done'))
+        exec_log.append(('P1', param, 'Done', None))
         previsto = model_fit.predict(start = start, end = end)
-        exe_log.append(('P2', param, 'Done'))
+        exec_log.append(('P2', param, 'Done', None))
         serie_real = pd.Series(arr_real, inter_real)
     
         size = len(previsto)
@@ -83,7 +77,7 @@ def calculo_erro_sarimax(desp_serie, param, intervalo):
         erro_medio = np.mean(erro)
         return abs(erro_medio)
     except Exception as e:
-        exe_log.append(('E', param, str(e)))
+        exec_log.append(('E', param, str(e), None))
         return 99999
 
 #Metodo que vai calcular o Erro do Modelo Holt-Winters
@@ -121,19 +115,19 @@ def calculo_erro_holt(desp_serie, param, intervalo):
 # 1m
 
 warnings.filterwarnings('ignore')
-intervalo = 1
+# intervalo = 1
 
 # hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
-hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
+# hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
 
 # hill_holts.start_random_initialization(25, intervalo, fpe_1m)
-hill_sarimax.start_random_initialization(25, intervalo, fpe_1m)
+# hill_sarimax.start_random_initialization(25, intervalo, fpe_1m)
 
 # test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
-test_results_sarimax, log_sarimax = hill_sarimax.optimize(1000, intervalo, fpe_1m)
+# test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_1m)
 
 # log_holts.to_csv('log_holts_hill_climb_1m.csv', sep=';')
-log_sarimax.to_csv('\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';')
+# log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';')
 
 
 # =============================================================================
@@ -155,11 +149,13 @@ hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
 hill_sarimax.start_random_initialization(25, intervalo, fpe_6m)
 
 # test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
-test_results_sarimax, log_sarimax = hill_sarimax.optimize(1000, intervalo, fpe_1m)
+test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_1m)
 
 # log_holts.to_csv('log_holts_hill_climb_1m.csv', sep=';')
-log_sarimax.to_csv('\\data\\logs\\log_sarimax_hill_climb_6m.csv', sep=';')
+log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_6m.csv', sep=';')
 
+df_log = pd.DataFrame(exec_log)
+df_log.to_csv(home_dir + '\\data\\logs\\exec_log_pt2.csv', sep=';')
 
 # =============================================================================
 # 12 m
@@ -172,15 +168,15 @@ hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
 hill_sarimax.start_random_initialization(25, intervalo, fpe_12m)
 
 # test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
-test_results_sarimax, log_sarimax = hill_sarimax.optimize(1000, intervalo, fpe_1m)
+test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_1m)
 
 # log_holts.to_csv('log_holts_hill_climb_1m.csv', sep=';')
-log_sarimax.to_csv('\\data\\logs\\log_sarimax_hill_climb_12m.csv', sep=';')
+log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_12m.csv', sep=';')
 
 # =============================================================================
 
-df_log = pd.DataFrame(exe_log)
-
+df_log = pd.DataFrame(exec_log)
+df_log.to_csv(home_dir + '\\data\\logs\\exec_log_pt3.csv', sep=';')
 errors = df_log.loc[df_log[0] == 'E']
 
 # =============================================================================
