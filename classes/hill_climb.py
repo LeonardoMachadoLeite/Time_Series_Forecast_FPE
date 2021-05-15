@@ -40,7 +40,7 @@ class HillClimbOptimization(object):
             print('init: ', i)
             param = self.generator.random_binary()
             
-            erro_medio = self.f_calcular_erro(fpe, param, 1)
+            erro_medio = self.f_calcular_erro(fpe, param, intervalo)
             
             self.test_results['ID'].append(i)
             self.test_results['ITERACOES'].append(1)

@@ -97,6 +97,8 @@ def calculo_erro_holt(desp_serie, param, intervalo):
         erro.append(abs(parc_erro))
 
     erro_medio = np.mean(erro)
+    if pd.isna(erro_medio):
+        return 1.0
     return abs(erro_medio)
                 
 
@@ -118,11 +120,8 @@ hill_sarimax.start_random_initialization(25, intervalo, fpe_1m)
 test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
 test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_1m)
 
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_1m.csv', sep=';')
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';')
-
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_1m.csv', sep=';')
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';')
+log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_1m.csv', sep=';', index=False)
+log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';', index=False)
 
 df_log = pd.DataFrame(exec_log)
 df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt1.csv', sep=';')
@@ -141,8 +140,8 @@ hill_sarimax.start_random_initialization(25, intervalo, fpe_6m)
 test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_6m)
 test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_6m)
 
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_6m.csv', sep=';')
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_6m.csv', sep=';')
+log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_6m.csv', sep=';', index=False)
+log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_6m.csv', sep=';', index=False)
 
 df_log = pd.DataFrame(exec_log)
 df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt2.csv', sep=';')
@@ -161,8 +160,8 @@ hill_sarimax.start_random_initialization(25, intervalo, fpe_12m)
 test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_12m)
 test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_12m)
 
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_12m.csv', sep=';')
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_12m.csv', sep=';')
+log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_12m.csv', sep=';', index=False)
+log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_12m.csv', sep=';', index=False)
 
 df_log = pd.DataFrame(exec_log)
 df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt3.csv', sep=';')
@@ -183,8 +182,8 @@ anneal_sarimax.start_random_initialization(25, intervalo, fpe_1m)
 test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_1m)
 test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_1m)
 
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_1m.csv', sep=';')
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_1m.csv', sep=';')
+log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_1m.csv', sep=';', index=False)
+log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_1m.csv', sep=';', index=False)
 
 df_log = pd.DataFrame(exec_log)
 df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt4.csv', sep=';')
@@ -203,8 +202,8 @@ anneal_sarimax.start_random_initialization(25, intervalo, fpe_6m)
 test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_6m)
 test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_6m)
 
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_6m.csv', sep=';')
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_6m.csv', sep=';')
+log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_6m.csv', sep=';', index=False)
+log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_6m.csv', sep=';', index=False)
 
 df_log = pd.DataFrame(exec_log)
 df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt5.csv', sep=';')

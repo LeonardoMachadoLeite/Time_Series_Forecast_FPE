@@ -41,14 +41,14 @@ class SimulatedAnnealingOptimization(object):
             print('init: ', i)
             param = self.generator.random_binary()
             
-            erro_medio = self.f_calcular_erro(fpe, param, 1)
+            erro_medio = self.f_calcular_erro(fpe, param, intervalo)
             
             self.test_results['ID'].append(i)
             self.test_results['ITERACOES'].append(1)
             self.test_results['PARAM'].append(param)
             self.test_results['MPA'].append(erro_medio)
             
-            self.log_holts = {
+            self.log = {
                 'ID': self.test_results['ID'].copy(),
                 'ITERACAO': self.test_results['ITERACOES'].copy(),
                 'PARAM_ATUAL': self.test_results['PARAM'].copy(),
