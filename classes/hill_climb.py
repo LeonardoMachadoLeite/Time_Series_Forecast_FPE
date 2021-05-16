@@ -35,7 +35,7 @@ class HillClimbOptimization(object):
         }
         self.f_calcular_erro = f_calcular_erro
     
-    def start_random_initialization(self, n, intevalo, fpe):
+    def start_random_initialization(self, n, intervalo, fpe):
         for i in range(n):
             print('init: ', i)
             param = self.generator.random_binary()

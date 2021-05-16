@@ -5,10 +5,10 @@ Created on Wed Mar 31 17:53:35 2021
 @author: leoml
 """
 
-import pprint
+# import pprint
 import pandas as pd
-from scipy.stats import friedmanchisquare, kruskal, wilcoxon
-import matplotlib.pyplot as plt
+from scipy.stats import shapiro, friedmanchisquare, kruskal, wilcoxon, shapiro
+# import matplotlib.pyplot as plt
 import os
 from dotenv import load_dotenv, find_dotenv
 
@@ -34,7 +34,26 @@ log_files = [
 
 
 best_results = pd.read_csv(home_dir + '\\analysis\\best_results.csv', sep=';')
-results = {}
+
+results_shapiro = {}
+
+
+for i in range(0,len(log_files)):
+    
+    modelo = log_files[i]
+    
+    log = best_results.loc[best_results['modelo'] == modelo]
+    log = log['MPA_MELHOR']
+    
+    stat, p = shapiro(log)
+    
+    results_shapiro[modelo] = (stat, p)
+
+print('\nShapiro Wilk nomarlity test:')
+for key in results_shapiro.keys():
+    print(key + ': ', results_shapiro[key])
+
+results_wilcoxon = {}
 
 
 for i in range(0,int(len(log_files) / 2)):
@@ -51,14 +70,17 @@ for i in range(0,int(len(log_files) / 2)):
     w, p = wilcoxon(log_a, log_b)
     
     key = modelo_a + ' x ' + modelo_b
-    results[key] = (w, p)
+    results_wilcoxon[key] = (w, p)
 
-for key in results.keys():
-    print(key + ': ', results[key])
+print('\nWilcoxon test:')
+for key in results_wilcoxon.keys():
+    print(key + ': ', results_wilcoxon[key])
 
-# Creating plot 
-data = ([log_a, log_b])
-plt.boxplot(data, labels=[modelo_a, modelo_b]) 
-  
-# show plot 
-plt.show()
+# =============================================================================
+# # Creating plot 
+# data = ([log_a, log_b])
+# plt.boxplot(data, labels=[modelo_a, modelo_b]) 
+#   
+# # show plot 
+# plt.show()
+# =============================================================================
