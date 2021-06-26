@@ -30,8 +30,7 @@ class RandomBinaryGenerator(object):
         else:
             return x[:tweak_index] + '0' + x[tweak_index + 1:]
     
-    def bit_flip_mutation(self, param):
-        p = 1 / self.bits
+    def bit_flip_mutation(self, param, p):
         ans = param
         
         for i in range(self.bits):

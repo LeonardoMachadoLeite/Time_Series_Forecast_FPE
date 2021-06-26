@@ -105,125 +105,140 @@ def calculo_erro_holt(desp_serie, param, intervalo):
 warnings.filterwarnings('ignore')
 
 # =============================================================================
-# Hill Climb
+# # =============================================================================
+# # Hill Climb
+# # =============================================================================
+# # 1 month
+# 
+# intervalo = 1
+# 
+# hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
+# hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
+# 
+# hill_holts.start_random_initialization(25, intervalo, fpe_1m)
+# hill_sarimax.start_random_initialization(25, intervalo, fpe_1m)
+# 
+# test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
+# test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_1m)
+# 
+# log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_1m.csv', sep=';', index=False)
+# log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';', index=False)
+# 
+# df_log = pd.DataFrame(exec_log)
+# df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt1.csv', sep=';')
+# 
+# # =============================================================================
+# # 6 months
+# 
+# intervalo = 6
+# 
+# hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
+# hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
+# 
+# hill_holts.start_random_initialization(25, intervalo, fpe_6m)
+# hill_sarimax.start_random_initialization(25, intervalo, fpe_6m)
+# 
+# test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_6m)
+# test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_6m)
+# 
+# log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_6m.csv', sep=';', index=False)
+# log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_6m.csv', sep=';', index=False)
+# 
+# df_log = pd.DataFrame(exec_log)
+# df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt2.csv', sep=';')
+# 
+# # =============================================================================
+# # 12 months
+# 
+# intervalo = 12
+# 
+# hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
+# hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
+# 
+# hill_holts.start_random_initialization(25, intervalo, fpe_12m)
+# hill_sarimax.start_random_initialization(25, intervalo, fpe_12m)
+# 
+# test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_12m)
+# test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_12m)
+# 
+# log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_12m.csv', sep=';', index=False)
+# log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_12m.csv', sep=';', index=False)
+# 
+# df_log = pd.DataFrame(exec_log)
+# df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt3.csv', sep=';')
+# 
 # =============================================================================
-# 1 month
-
-intervalo = 1
-
-hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
-hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
-
-hill_holts.start_random_initialization(25, intervalo, fpe_1m)
-hill_sarimax.start_random_initialization(25, intervalo, fpe_1m)
-
-test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_1m)
-test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_1m)
-
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_1m.csv', sep=';', index=False)
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_1m.csv', sep=';', index=False)
-
-df_log = pd.DataFrame(exec_log)
-df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt1.csv', sep=';')
-
 # =============================================================================
-# 6 months
+# # =============================================================================
+# # Simulated Annealing
+# # =============================================================================
+# # 1 month
+# 
+# intervalo = 1
+# 
+# anneal_holts = SimulatedAnnealingOptimization(calculo_erro_holt, 29)
+# anneal_sarimax = SimulatedAnnealingOptimization(calculo_erro_sarimax, 26)
+# 
+# anneal_holts.start_random_initialization(25, intervalo, fpe_1m)
+# anneal_sarimax.start_random_initialization(25, intervalo, fpe_1m)
+# 
+# test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_1m)
+# test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_1m)
+# 
+# log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_1m.csv', sep=';', index=False)
+# log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_1m.csv', sep=';', index=False)
+# 
+# df_log = pd.DataFrame(exec_log)
+# df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt4.csv', sep=';')
+# 
+# # =============================================================================
+# # 6 months
+# 
+# intervalo = 6
+# 
+# anneal_holts = SimulatedAnnealingOptimization(calculo_erro_holt, 29)
+# anneal_sarimax = SimulatedAnnealingOptimization(calculo_erro_sarimax, 26)
+# 
+# anneal_holts.start_random_initialization(25, intervalo, fpe_6m)
+# anneal_sarimax.start_random_initialization(25, intervalo, fpe_6m)
+# 
+# test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_6m)
+# test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_6m)
+# 
+# log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_6m.csv', sep=';', index=False)
+# log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_6m.csv', sep=';', index=False)
+# 
+# df_log = pd.DataFrame(exec_log)
+# df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt5.csv', sep=';')
+# 
+# # =============================================================================
+# # 12 months
+# 
+# intervalo = 12
+# 
+# anneal_holts = SimulatedAnnealingOptimization(calculo_erro_holt, 29)
+# anneal_sarimax = SimulatedAnnealingOptimization(calculo_erro_sarimax, 26)
+# 
+# anneal_holts.start_random_initialization(25, intervalo, fpe_12m)
+# anneal_sarimax.start_random_initialization(25, intervalo, fpe_12m)
+# 
+# test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_12m)
+# test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_12m)
+# 
+# log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_12m.csv', sep=';')
+# log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_12m.csv', sep=';')
+# 
+# df_log = pd.DataFrame(exec_log)
+# df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt6.csv', sep=';')
+# =============================================================================
 
+
+
+# Testing area
 intervalo = 6
 
-hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
-hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
-
-hill_holts.start_random_initialization(25, intervalo, fpe_6m)
-hill_sarimax.start_random_initialization(25, intervalo, fpe_6m)
-
-test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_6m)
-test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_6m)
-
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_6m.csv', sep=';', index=False)
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_6m.csv', sep=';', index=False)
-
-df_log = pd.DataFrame(exec_log)
-df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt2.csv', sep=';')
-
-# =============================================================================
-# 12 months
-
-intervalo = 12
-
-hill_holts = HillClimbOptimization(calculo_erro_holt, 29)
-hill_sarimax = HillClimbOptimization(calculo_erro_sarimax, 26)
-
-hill_holts.start_random_initialization(25, intervalo, fpe_12m)
-hill_sarimax.start_random_initialization(25, intervalo, fpe_12m)
-
-test_results_holt, log_holts = hill_holts.optimize(1000, intervalo, fpe_12m)
-test_results_sarimax, log_sarimax = hill_sarimax.optimize(100, intervalo, fpe_12m)
-
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_hill_climb_12m.csv', sep=';', index=False)
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_hill_climb_12m.csv', sep=';', index=False)
-
-df_log = pd.DataFrame(exec_log)
-df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt3.csv', sep=';')
-
-# =============================================================================
-# Simulated Annealing
-# =============================================================================
-# 1 month
-
-intervalo = 1
-
 anneal_holts = SimulatedAnnealingOptimization(calculo_erro_holt, 29)
-anneal_sarimax = SimulatedAnnealingOptimization(calculo_erro_sarimax, 26)
-
-anneal_holts.start_random_initialization(25, intervalo, fpe_1m)
-anneal_sarimax.start_random_initialization(25, intervalo, fpe_1m)
-
-test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_1m)
-test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_1m)
-
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_1m.csv', sep=';', index=False)
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_1m.csv', sep=';', index=False)
-
-df_log = pd.DataFrame(exec_log)
-df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt4.csv', sep=';')
-
-# =============================================================================
-# 6 months
-
-intervalo = 6
-
-anneal_holts = SimulatedAnnealingOptimization(calculo_erro_holt, 29)
-anneal_sarimax = SimulatedAnnealingOptimization(calculo_erro_sarimax, 26)
 
 anneal_holts.start_random_initialization(25, intervalo, fpe_6m)
-anneal_sarimax.start_random_initialization(25, intervalo, fpe_6m)
 
 test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_6m)
-test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_6m)
-
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_6m.csv', sep=';', index=False)
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_6m.csv', sep=';', index=False)
-
-df_log = pd.DataFrame(exec_log)
-df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt5.csv', sep=';')
-
-# =============================================================================
-# 12 months
-
-intervalo = 12
-
-anneal_holts = SimulatedAnnealingOptimization(calculo_erro_holt, 29)
-anneal_sarimax = SimulatedAnnealingOptimization(calculo_erro_sarimax, 26)
-
-anneal_holts.start_random_initialization(25, intervalo, fpe_12m)
-anneal_sarimax.start_random_initialization(25, intervalo, fpe_12m)
-
-test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_12m)
-test_results_sarimax, log_sarimax = anneal_sarimax.optimize(100, intervalo, fpe_12m)
-
-log_holts.to_csv(home_dir + '\\data\\logs\\log_holts_simulated_annealing_12m.csv', sep=';')
-log_sarimax.to_csv(home_dir + '\\data\\logs\\log_sarimax_simulated_annealing_12m.csv', sep=';')
-
-df_log = pd.DataFrame(exec_log)
-df_log.to_csv(home_dir + '\\data\\logs\\exec_logs\\exec_log_pt6.csv', sep=';')

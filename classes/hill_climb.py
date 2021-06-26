@@ -19,6 +19,7 @@ class HillClimbOptimization(object):
     
     def __init__(self, f_calcular_erro, bits):
         self.generator = RandomBinaryGenerator(bits)
+        self.bits = bits
         self.log = {
             'ID': [],
             'ITERACAO': [],
@@ -68,7 +69,7 @@ class HillClimbOptimization(object):
                 if self.test_results['ITERACOES'][i] % 10 == 0: print('i: ', self.test_results['ITERACOES'][i])
                 
                 id_ = self.test_results['ID'][i]
-                param = self.generator.bit_flip_mutation(self.test_results['PARAM'][i])
+                param = self.generator.bit_flip_mutation(self.test_results['PARAM'][i], 1/self.bits)
                 
                 erro_medio = self.f_calcular_erro(fpe, param, intervalo)
                 
