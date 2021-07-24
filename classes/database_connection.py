@@ -38,6 +38,20 @@ class DatabaseConnection(object):
         cursor.close()
         return ans
     
+    def obter_cenario_mape(self, v_idt_modelo, v_idt_periodo, v_parametro, v_mape):
+        cursor = self.cnx.cursor()
+        
+        cursor.callproc('obter_cenario_mape', args=(v_idt_modelo, v_idt_periodo, v_parametro, v_mape))
+        
+        return cursor
+    
+    def inserir_log_exec(self, v_idt_exec, v_idt_modelo, v_idt_periodo, v_parametro, v_mape):
+        cursor = self.cnx.cursor()
+        
+        cursor.callproc('inserir_log_exec', args=(v_idt_exec, v_idt_modelo, v_idt_periodo, v_parametro, v_mape))
+        
+        return cursor
+    
     def close(self):
         self.cnx.close()
 
@@ -52,14 +66,28 @@ class TableColumns():
     def periodo(self):
         return ['IDT_PERIODO', 'INICIO', 'FIM', 'DURACAO']
 
-db = DatabaseConnection()
-cols = TableColumns()
+class SarimaDbController():
+    
+    def __init__(self, periodo, modelo):
+        self.idt_periodo = periodo
+        self.idt_modelo = modelo
+    
+    def get_mape(self):
+        return 0
 
-result = db.query("""
-                  select * from modelo_previsao;
-                  """)
 
-model = pd.DataFrame(data=result, columns=cols.modelo())
+# =============================================================================
+# db = DatabaseConnection()
+# cols = TableColumns()
+# =============================================================================
 
-print(model)
+# =============================================================================
+# result = db.query("""
+#                   select * from modelo_previsao;
+#                   """)
+# 
+# model = pd.DataFrame(data=result, columns=cols.modelo())
+# 
+# print(model)
+# =============================================================================
 

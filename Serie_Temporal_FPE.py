@@ -20,6 +20,8 @@ sys.path.append(home_dir + '\\classes')
 import pandas as pd
 import numpy as np
 
+from database_connection import *
+from calculate_mape import Executor
 from sarimax_constructor import SARIMAX_Constructor
 from holt_constructor import Holt_Constructor
 from hill_climb import HillClimbOptimization
@@ -45,15 +47,20 @@ def calculo_erro_sarimax(desp_serie, param, intervalo):
             arr_real.append(desp_serie[max_size])
             inter_real.append(max_size)
             desp_serie = desp_serie.drop(max_size)
-    
+        
+        v_mape = None
+        v_mape = db.obter_cenario_mape(v_idt_modelo, v_idt_periodo, param, v_mape)
+        
+        if v_mape != None:
+            db.inserir_log_exec(v_idt_exec, v_idt_modelo, v_idt_periodo, param, v_mape)
+            return v_mape
+        
         model_fit = SARIMAX_Constructor(desp_serie, exec_log).fit_model(param)
     
         start = len(desp_serie)
         end = len(desp_serie)+intervalo-1
     
-        exec_log.append(('P1', param, 'Done', None))
         previsto = model_fit.predict(start = start, end = end)
-        exec_log.append(('P2', param, 'Done', None))
         serie_real = pd.Series(arr_real, inter_real)
     
         size = len(previsto)
@@ -63,10 +70,12 @@ def calculo_erro_sarimax(desp_serie, param, intervalo):
             parc_erro = (previsto[i] - serie_real.iloc[i])/serie_real.iloc[i]
             erro.append(abs(parc_erro))
     
-        erro_medio = np.mean(erro)
-        return abs(erro_medio)
+        erro_medio = abs(np.mean(erro))
+        db.inserir_log_exec(v_idt_exec, v_idt_modelo, v_idt_periodo, param, erro_medio)
+        return erro_medio
     except Exception as e:
-        exec_log.append(('E', param, str(e), None))
+        #exec_log.append(('E', param, str(e), None))
+        db.inserir_log_exec(v_idt_exec, v_idt_modelo, v_idt_periodo, param, 99999)
         return 99999
 
 #Metodo que vai calcular o Erro do Modelo Holt-Winters
@@ -233,12 +242,18 @@ warnings.filterwarnings('ignore')
 # =============================================================================
 
 
-
-# Testing area
-intervalo = 6
-
-anneal_holts = SimulatedAnnealingOptimization(calculo_erro_holt, 29)
-
-anneal_holts.start_random_initialization(25, intervalo, fpe_6m)
-
-test_results_holt, log_holts = anneal_holts.optimize(1000, intervalo, fpe_6m)
+try:
+    # Testing area
+    intervalo = 6
+    
+    #Executor(idt_exec, idt_modelo, idt_periodo))
+    executor = Executor(1, 2, 2)
+    
+    anneal_sarima = SimulatedAnnealingOptimization(executor.calculo_erro_sarimax, 26)
+    
+    anneal_sarima.start_random_initialization(5, intervalo, fpe_6m)
+    
+    anneal_sarima, log_holts = anneal_sarima.optimize(10, intervalo, fpe_6m)
+except Exception as e:
+    executor.close()
+    raise e
